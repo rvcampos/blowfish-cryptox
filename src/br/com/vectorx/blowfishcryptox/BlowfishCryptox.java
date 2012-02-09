@@ -1,8 +1,8 @@
-package br.com.blowfishcryptox;
+package br.com.vectorx.blowfishcryptox;
 
 /*
  * =============================================================================
- * Copyright (c) 2012 Renan Vizza Campos. All rights reserved. Just Kidding.
+ * Copyright (c) 2012 Renan Vizza Campos/Vector X. All rights reserved. Just Kidding.
  * LICENSE: Apache 2.0
  * Use como quiser, se for melhorar me avise!!
  * Feel free to use this class/project, if you enhance it, please, contact me!
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Classe que criptografa e descriptografa somente para <b><br>
  * Blowfish<br>
- * How to use: CryptoXCipher myCrypt = CryptoXCipher.{@link #getInstance(String, String, int)}
+ * How to use: BlowfishCryptox myCrypt = BlowfishCryptox.{@link #getInstance(String, int)}
  * 
  * @author renan.campos
  * 
