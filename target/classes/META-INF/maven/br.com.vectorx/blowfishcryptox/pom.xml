@@ -4,6 +4,16 @@
 	<groupId>br.com.vectorx</groupId>
 	<artifactId>blowfishcryptox</artifactId>
 	<version>1.0</version>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<connection>https://code.google.com/p/blowfish-cryptox</connection>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
