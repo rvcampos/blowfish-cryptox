@@ -1,0 +1,9 @@
+
+syntax: regexp
+^target/blowfishcryptox-1\.0\.jar$
+syntax: regexp
+^target/maven-archiver$
+syntax: regexp
+^target/surefire-reports$
+syntax: regexp
+^target$
