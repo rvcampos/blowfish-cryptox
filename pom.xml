@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.vectorx</groupId>
 	<artifactId>blowfishcryptox</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -14,6 +14,21 @@
 	<scm>
 		<connection>https://code.google.com/p/blowfish-cryptox</connection>
 	</scm>
+	<distributionManagement>
+		<!-- Publish versioned releases here -->
+		<repository>
+			<id>nexus</id>
+			<name>My releases</name>
+			<url>http://10.0.2.211:8081/nexus/content/repositories/releases</url>
+		</repository>
+
+		<!-- Publish snapshots here -->
+		<snapshotRepository>
+			<id>nexus</id>
+			<name>My snapshots</name>
+			<url>http://10.0.2.211:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
