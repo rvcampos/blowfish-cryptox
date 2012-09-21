@@ -13,7 +13,7 @@
 	</licenses>
 	<scm>
 		<connection>scm:hg:https://code.google.com/p/blowfish-cryptox</connection>
-		<developerConnection>scm:hg:https://renanvcampos@code.google.com/p/blowfish-cryptox</developerConnection>
+		<developerConnection>scm:hg:https://code.google.com/p/blowfish-cryptox</developerConnection>
 	</scm>
 	<distributionManagement>
 		<!-- Publish versioned releases here -->
