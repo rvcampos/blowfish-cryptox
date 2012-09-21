@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.vectorx</groupId>
 	<artifactId>blowfishcryptox</artifactId>
-	<version>1.1</version>
+	<version>1.1-SNAPSHOT</version>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -12,7 +12,7 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>https://code.google.com/p/blowfish-cryptox</connection>
+		<connection>scm:hg:https://code.google.com/p/blowfish-cryptox</connection>
 	</scm>
 	<distributionManagement>
 		<!-- Publish versioned releases here -->
