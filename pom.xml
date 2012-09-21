@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.vectorx</groupId>
 	<artifactId>blowfishcryptox</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -13,6 +13,7 @@
 	</licenses>
 	<scm>
 		<connection>scm:hg:ssh://10.0.2.211//opt/mercurial/vectorx/blowfish-cryptox</connection>
+		<tag>blowfishcryptox-1.2</tag>
 	</scm>
 	<distributionManagement>
 		<!-- Publish versioned releases here -->
@@ -78,8 +79,9 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<arguments>-Dstaging.hg.repo.url=ssh://10.0.2.211//opt/mercurial/vectorx/blowfish-cryptox
-						-Dstaging.mvn.repo.url=http://10.0.2.211:8081/nexus/content/repositories/releases</arguments>
+					<arguments>-Dstaging.hg.repo.url=ssh://10.0.2.211//opt/mercurial/vectorx/blowfish-cryptox</arguments>
+					<serverId>nexus</serverId>
+					<nexusUrl>http://10.0.2.211:8081/nexus</nexusUrl>
 				</configuration>
 			</plugin>
 		</plugins>
