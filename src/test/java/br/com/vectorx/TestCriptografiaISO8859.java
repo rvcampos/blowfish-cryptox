@@ -25,7 +25,7 @@ public class TestCriptografiaISO8859 {
 	@Before
 	public void setUp() {
 		Random random = new Random(System.currentTimeMillis());
-		cesarCipher = random.nextInt(64);
+		cesarCipher = random.nextInt();
 		x = BlowfishCryptox.getInstance(salt, cesarCipher,
 				Charset.forName("ISO-8859-1"));
 		x2 = BlowfishCryptox.getInstance(salt2, cesarCipher,

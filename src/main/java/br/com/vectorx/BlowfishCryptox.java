@@ -33,7 +33,8 @@ import org.slf4j.LoggerFactory;
  */
 public class BlowfishCryptox {
 
-	private int cifraCesar = 16;
+	private final int saltMaxLength = 16;
+	private int cifraCesar = saltMaxLength;
 	private Charset charset;
 	private Cipher encrypt;
 	private Cipher decrypt;
@@ -57,7 +58,7 @@ public class BlowfishCryptox {
 		DECRYPT;
 	}
 
-	private static Logger log = LoggerFactory.getLogger(BlowfishCryptox.class);
+	private static Logger LOG = LoggerFactory.getLogger(BlowfishCryptox.class);
 
 	/**
 	 * Construtor private
@@ -74,7 +75,7 @@ public class BlowfishCryptox {
 	private BlowfishCryptox(String palavraChave, String algoritmo,
 			int cifraCesar, Charset charset) throws IllegalArgumentException {
 		try {
-			validateInput(palavraChave, cifraCesar, charset);
+			validateInput(palavraChave, cifraCesar);
 			this.charset = charset;
 			SecretKey chave = new SecretKeySpec(palavraChave.getBytes(charset),
 					algoritmo);
@@ -101,15 +102,15 @@ public class BlowfishCryptox {
 	 *            - Charset utilizado e.g (UTF-8, ISO-8859-1)
 	 * @throws IllegalArgumentException
 	 */
-	private void validateInput(String palavraChave, int cifraCesar,
-			Charset charset) throws IllegalArgumentException {
+	private void validateInput(String palavraChave, int cifraCesar)
+			throws IllegalArgumentException {
 		// Checagem de Nulo
-		if (palavraChave == null) {
+		if (palavraChave == null || palavraChave.trim().isEmpty()) {
 			throw new IllegalArgumentException(
 					"Palavra chave (sal) não pode ser nula");
 		}
 		// Checagem de tamanho
-		if (palavraChave != null && palavraChave.length() > 16) {
+		if (palavraChave.length() > saltMaxLength) {
 			throw new IllegalArgumentException(
 					"Tamanho da Palavra chave (sal) maior que 16");
 		}
@@ -182,14 +183,14 @@ public class BlowfishCryptox {
 		byte[] enc = null;
 		byte[] cc = null;
 		// Retorna a string com aplicação cifra de cesar
-		str = this.cifraCesar(str, Mode.ENCRYPT);
+		String crypted = this.cifraCesar(str, Mode.ENCRYPT);
 		try {
 			// Pega o byte[] correspondente à String para o charset informado
-			cc = str.getBytes(this.charset);
+			cc = crypted.getBytes(this.charset);
 			// Cipher
 			enc = this.encrypt.doFinal(cc);
 		} catch (Exception e) {
-			log.error("Crypt", e);
+			LOG.error("Crypt", e);
 		}
 		// Faz encoding com Base64
 		return new String(Base64.encodeBase64(enc));
@@ -246,7 +247,7 @@ public class BlowfishCryptox {
 			// Cipher
 			cc = this.decrypt.doFinal(dec);
 		} catch (Exception e) {
-			log.error("Decrypt", e);
+			LOG.error("Decrypt", e);
 			return null;
 		}
 		// Retorna uma String aplicando a cifra de cesar para descriptografia
