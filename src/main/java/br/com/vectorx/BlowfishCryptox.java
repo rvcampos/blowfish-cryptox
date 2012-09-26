@@ -23,32 +23,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Classe que criptografa e descriptografa somente para <b><br>
- * Blowfish<br>
- * How to use: BlowfishCryptox myCrypt = BlowfishCryptox.
- * {@link #getInstance(String, int)}
- * 
+ * Classe que criptografa e descriptografa somente para <b> Blowfish</b><br>
+ * How to use: BlowfishCryptox myCrypt = BlowfishCryptox
+ * {@link BlowfishCryptox#getInstance(String, int)}<br>
+ * <br>
  * Getting too much <b>java.security.InvalidKeyException: Illegal key size or
  * default parameters?</b> <br>
- * Visit:<br>
- * <a>http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-
- * 429243.html</a> <br>
- * <br>
+ * Check Oracle Unlimited JCE <br>
  * If your country laws do not allow you to use that, use cifraCesar between -64
  * AND 64 and salt length <=16
  * 
+ * @see <a
+ *      href="http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html">Oracle
+ *      Unlimited JCE</a>
  * @author renan.campos
  * 
  */
 public class BlowfishCryptox {
 
-	private int saltMaxLength = 16;
+	/**
+	 * Tamanho máximo da palavra salt caso não tenha <a href=
+	 * "http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html"
+	 * >Oracle Unlimited JCE</a>
+	 */
+	private static final int LIMITEDSALTLENGTH = 16;
+	/**
+	 * Tamanho máximo da palavra salt caso tenha <a href=
+	 * "http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html"
+	 * >Oracle Unlimited JCE</a>
+	 */
 	private static final int UNLIMITEDJCESALT = 56;
+	/**
+	 * Valor máximo Cifra de César
+	 */
 	private static final int CIFRAMAX = 128;
+	/**
+	 * Valor mínimo Cifra de César
+	 */
 	private static final int CIFRAMIN = -128;
-	private int cifraCesar = saltMaxLength;
+	/**
+	 * Valor cifra de cesar
+	 */
+	private int cifraCesar = CIFRAMAX;
 	private Charset charset;
+	/**
+	 * {@link Cipher} para passo de criptografia
+	 */
 	private Cipher encrypt;
+	/**
+	 * {@link Cipher} para passo de descriptografia
+	 */
 	private Cipher decrypt;
 
 	/**
@@ -73,12 +97,13 @@ public class BlowfishCryptox {
 	private static Logger LOG = LoggerFactory.getLogger(BlowfishCryptox.class);
 
 	/**
-	 * Construtor private
+	 * Construtor private. Define o tamanho máximo da palavra salt de acordo com
+	 * o SecurityPolice instalado
 	 * 
 	 * @param palavraChave
 	 *            Palavra chave
 	 * @param algoritmo
-	 *            Algoritmo a ser utilizado
+	 *            Algoritmo a ser utilizado (no caso o Blowfish)
 	 * @param cifraCesar
 	 *            em quantos numeros os caracteres serão trocados
 	 * @param charset
@@ -87,10 +112,12 @@ public class BlowfishCryptox {
 	private BlowfishCryptox(String palavraChave, String algoritmo,
 			int cifraCesar, Charset charset) throws IllegalArgumentException {
 		try {
+			int maxSalt = LIMITEDSALTLENGTH;
+			// Checagem para ver se tem JCE Unlimited Strength Policy instalado
 			if (Cipher.getMaxAllowedKeyLength(algoritmo) > 128) {
-				saltMaxLength = BlowfishCryptox.UNLIMITEDJCESALT;
+				maxSalt = BlowfishCryptox.UNLIMITEDJCESALT;
 			}
-			validateInput(palavraChave, cifraCesar);
+			validateInput(palavraChave, cifraCesar, maxSalt);
 			this.charset = charset;
 			SecretKey chave = new SecretKeySpec(palavraChave.getBytes(charset),
 					algoritmo);
@@ -106,29 +133,33 @@ public class BlowfishCryptox {
 
 	/**
 	 * Valida o input<br>
-	 * As validações feitas são: <li>Palavra Chave nula</li> <li>Palavra Chave
-	 * com tamanho maior que 16</li>
+	 * As validações feitas são:
+	 * <ul>
+	 * <li>Palavra Chave nula</li>
+	 * <li>Palavra Chave com tamanho maior que 16</li>
+	 * <li>cifra de cesar < -128 ou > 128</li>
+	 * </ul>
 	 * 
 	 * @param palavraChave
 	 *            - palavra chave (Salt)
 	 * @param cifraCesar
-	 *            - cifra de cesar (caesar cipher, shift chars) - Min -128 and Max
-	 *            128
-	 * @param charset
-	 *            - Charset utilizado e.g (UTF-8, ISO-8859-1)
+	 *            - cifra de cesar (caesar cipher, shift chars) - Min -128 and
+	 *            Max 128
+	 * @param maxSaltLength
+	 *            - Tamanho máximo da palavra chave (salt)
 	 * @throws IllegalArgumentException
 	 */
-	private void validateInput(String palavraChave, int cifraCesar)
-			throws IllegalArgumentException {
+	private void validateInput(String palavraChave, int cifraCesar,
+			int maxSaltLength) throws IllegalArgumentException {
 		// Checagem de Nulo
 		if (palavraChave == null || palavraChave.trim().isEmpty()) {
 			throw new IllegalArgumentException(
 					"Palavra chave (sal) não pode ser nula");
 		}
 		// Checagem de tamanho da palavra Salt
-		if (palavraChave.length() > saltMaxLength) {
+		if (palavraChave.length() > maxSaltLength) {
 			throw new IllegalArgumentException(
-					"Tamanho da Palavra chave (sal) maior que " + saltMaxLength);
+					"Tamanho da Palavra chave (sal) maior que " + maxSaltLength);
 		}
 
 		// Checagem do tamanho da cifra de cesar
@@ -144,8 +175,6 @@ public class BlowfishCryptox {
 	 * 
 	 * @param palavraChave
 	 *            chave para criar salt (sal)
-	 * @param algoritmo
-	 *            algoritmo para criptografia
 	 * @param val
 	 *            valor para cifra de cesar
 	 * @return instancia de {@link BlowfishCryptox}
@@ -177,14 +206,15 @@ public class BlowfishCryptox {
 	 * Método getInstance com charset definido pelo usuário
 	 * 
 	 * @param palavraChave
-	 *            chave para criar salt (sal)
-	 * @param algoritmo
-	 *            algoritmo para criptografia
+	 *            chave para criar salt (sal) com tamanho máximo 16 ou 56 (se
+	 *            tiver <a href=
+	 *            "http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html"
+	 *            >Oracle Unlimited JCE</a> instalado)
 	 * @param val
-	 *            valor para cifra de cesar (> -32764 e < 32764)
+	 *            valor para cifra de cesar (> -128 e < 128)
 	 * @param cs
 	 *            Charset
-	 * @return
+	 * @return instancia de {@link BlowfishCryptox}
 	 */
 	public static BlowfishCryptox getInstance(String palavraChave, int val,
 			Charset cs) {
@@ -212,15 +242,19 @@ public class BlowfishCryptox {
 			cc = crypted.getBytes(this.charset);
 			// Cipher
 			enc = this.encrypt.doFinal(cc);
-		} catch (Exception e) {
-			LOG.error("Crypt", e);
+		} catch (IllegalBlockSizeException e) {
+			LOG.error("Falha de conversão. Tamanho de Block Size", e);
+			return null;
+		} catch (BadPaddingException e) {
+			LOG.error("Falha de BadPaddingException. Tamanho de Block Size", e);
+			return null;
 		}
 		// Faz encoding com Base64
 		return new String(Base64.encodeBase64(enc));
 	}
 
 	/**
-	 * Aplica o <a href=http://pt.wikipedia.org/wiki/Cifra_de_César>conceito
+	 * Aplica o conceito <a href=http://pt.wikipedia.org/wiki/Cifra_de_César>
 	 * Cifra de cesar</a> para a String, dependendo de seu modo
 	 * 
 	 * @param str
@@ -252,12 +286,11 @@ public class BlowfishCryptox {
 	}
 
 	/**
-	 * Descriptografia uma string criptografada
+	 * Descriptografa uma string criptografada
 	 * 
 	 * @param str
 	 *            String criptografada
 	 * @return String descriptografada
-	 * @throws UnsupportedEncodingException
 	 * @throws IllegalBlockSizeException
 	 * @throws BadPaddingException
 	 */
@@ -269,8 +302,11 @@ public class BlowfishCryptox {
 			dec = Base64.decodeBase64(str.getBytes(this.charset));
 			// Cipher
 			cc = this.decrypt.doFinal(dec);
-		} catch (Exception e) {
-			LOG.error("Decrypt", e);
+		} catch (IllegalBlockSizeException e) {
+			LOG.error("Falha de conversão. Tamanho de Block Size", e);
+			return null;
+		} catch (BadPaddingException e) {
+			LOG.error("Falha de BadPaddingException. Tamanho de Block Size", e);
 			return null;
 		}
 		// Retorna uma String aplicando a cifra de cesar para descriptografia
