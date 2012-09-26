@@ -28,12 +28,24 @@ import org.slf4j.LoggerFactory;
  * How to use: BlowfishCryptox myCrypt = BlowfishCryptox.
  * {@link #getInstance(String, int)}
  * 
+ * Getting too much <b>java.security.InvalidKeyException: Illegal key size or
+ * default parameters?</b> <br>
+ * Visit:<br>
+ * <a>http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-
+ * 429243.html</a> <br>
+ * <br>
+ * If your country laws do not allow you to use that, use cifraCesar between -64
+ * AND 64 and salt length <=16
+ * 
  * @author renan.campos
  * 
  */
 public class BlowfishCryptox {
 
-	private final int saltMaxLength = 16;
+	private int saltMaxLength = 16;
+	private static final int UNLIMITEDJCESALT = 56;
+	private static final int CIFRAMAX = 128;
+	private static final int CIFRAMIN = -128;
 	private int cifraCesar = saltMaxLength;
 	private Charset charset;
 	private Cipher encrypt;
@@ -75,6 +87,9 @@ public class BlowfishCryptox {
 	private BlowfishCryptox(String palavraChave, String algoritmo,
 			int cifraCesar, Charset charset) throws IllegalArgumentException {
 		try {
+			if (Cipher.getMaxAllowedKeyLength(algoritmo) > 128) {
+				saltMaxLength = BlowfishCryptox.UNLIMITEDJCESALT;
+			}
 			validateInput(palavraChave, cifraCesar);
 			this.charset = charset;
 			SecretKey chave = new SecretKeySpec(palavraChave.getBytes(charset),
@@ -97,7 +112,8 @@ public class BlowfishCryptox {
 	 * @param palavraChave
 	 *            - palavra chave (Salt)
 	 * @param cifraCesar
-	 *            - cifra de cesar (caesar cipher, shift chars)
+	 *            - cifra de cesar (caesar cipher, shift chars) - Min -128 and Max
+	 *            128
 	 * @param charset
 	 *            - Charset utilizado e.g (UTF-8, ISO-8859-1)
 	 * @throws IllegalArgumentException
@@ -109,10 +125,17 @@ public class BlowfishCryptox {
 			throw new IllegalArgumentException(
 					"Palavra chave (sal) não pode ser nula");
 		}
-		// Checagem de tamanho
+		// Checagem de tamanho da palavra Salt
 		if (palavraChave.length() > saltMaxLength) {
 			throw new IllegalArgumentException(
-					"Tamanho da Palavra chave (sal) maior que 16");
+					"Tamanho da Palavra chave (sal) maior que " + saltMaxLength);
+		}
+
+		// Checagem do tamanho da cifra de cesar
+		if (cifraCesar < BlowfishCryptox.CIFRAMIN
+				|| cifraCesar > BlowfishCryptox.CIFRAMAX) {
+			throw new IllegalArgumentException(
+					"Cifra de Cesar deve estar entre -128 e 128");
 		}
 	}
 
@@ -158,7 +181,7 @@ public class BlowfishCryptox {
 	 * @param algoritmo
 	 *            algoritmo para criptografia
 	 * @param val
-	 *            valor para cifra de cesar
+	 *            valor para cifra de cesar (> -32764 e < 32764)
 	 * @param cs
 	 *            Charset
 	 * @return
