@@ -23,8 +23,8 @@ public class TestCriptografiaUTF8 {
 
 	@Before
 	public void setUp() {
-		Random random = new Random(System.currentTimeMillis());
-		cesarCipher = random.nextInt();
+		Random random = new Random();
+		cesarCipher = random.nextInt(128);
 		x = BlowfishCryptox.getInstance(salt, cesarCipher);
 		x2 = BlowfishCryptox.getInstance(salt2, cesarCipher);
 		assertNotNull(x);
