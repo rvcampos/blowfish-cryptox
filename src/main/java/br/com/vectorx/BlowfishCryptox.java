@@ -9,7 +9,6 @@ package br.com.vectorx;
  * 
  * contact: renanvcampos@gmail.com
  */
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import javax.crypto.BadPaddingException;
@@ -114,7 +113,7 @@ public class BlowfishCryptox {
 		try {
 			int maxSalt = LIMITEDSALTLENGTH;
 			// Checagem para ver se tem JCE Unlimited Strength Policy instalado
-			if (Cipher.getMaxAllowedKeyLength(algoritmo) > 128) {
+			if (Cipher.getMaxAllowedKeyLength(algoritmo) > BlowfishCryptox.CIFRAMAX) {
 				maxSalt = BlowfishCryptox.UNLIMITEDJCESALT;
 			}
 			validateInput(palavraChave, cifraCesar, maxSalt);
