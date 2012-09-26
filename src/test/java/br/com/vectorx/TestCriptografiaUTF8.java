@@ -1,11 +1,10 @@
 package br.com.vectorx;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
@@ -25,14 +24,14 @@ public class TestCriptografiaUTF8 {
 	@Before
 	public void setUp() {
 		Random random = new Random(System.currentTimeMillis());
-		cesarCipher = random.nextInt(64);
+		cesarCipher = random.nextInt();
 		x = BlowfishCryptox.getInstance(salt, cesarCipher);
 		x2 = BlowfishCryptox.getInstance(salt2, cesarCipher);
 		assertNotNull(x);
 		assertNotNull(x2);
 		senhaCriptografada = x.crypt(senha);
 	}
-	
+
 	@Test
 	public void criptografia() {
 		assertNotNull(senhaCriptografada);
