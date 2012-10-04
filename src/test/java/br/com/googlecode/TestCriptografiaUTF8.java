@@ -1,4 +1,4 @@
-package br.com.vizza;
+package br.com.googlecode;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,7 +11,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.vizza.BlowfishCryptox;
+import br.com.googlecode.BlowfishCryptox;
 
 public class TestCriptografiaUTF8 {
 
