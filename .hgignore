@@ -7,3 +7,5 @@ syntax: regexp
 ^target/surefire-reports$
 syntax: regexp
 ^target$
+syntax: regexp
+^target$
