@@ -1,4 +1,4 @@
-package br.com.vectorx;
+package br.com.vizza;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -11,6 +11,8 @@ import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import br.com.vizza.BlowfishCryptox;
 
 public class TestCriptografiaISO8859 {
 
